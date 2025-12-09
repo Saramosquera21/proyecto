@@ -1,0 +1,644 @@
+export interface Persona {
+  id: number
+  nombre: string
+  foto: string
+  bio: string
+  intereses: string[]
+  nivel: string
+  ciudad?: string
+  barrio?: string   // 👈 agregar esto
+  parchar: string[]
+  email?: string
+  telefono?: string
+  red_social?: string
+  ocultar?: { telefono?: boolean; red_social?: boolean }
+}
+
+export const personas: Persona[] = [
+  // El Poblado (6 personas)
+  {
+    id: 1,
+    nombre: "Laura Gómez",
+    email: "laura.gomez@email.com",
+    foto: "https://example.com/laura.png",
+    bio: "Ejecutiva en empresa tech, vive en El Poblado hace 5 años.",
+    intereses: ["Café especial", "Tecnología", "Yoga", "Gastronomía"],
+    nivel: "Avanzado",
+    ciudad: "El Poblado",
+    parchar: ["Café Velvet", "Ruta N", "Parque El Poblado"],
+    telefono: "+57 312 345 6789",
+    red_social: "@lauragomez_poblado"
+  },
+  {
+    id: 2,
+    nombre: "Carlos Restrepo",
+    email: "carlos.restrepo@email.com",
+    foto: "https://example.com/carlos.png",
+    bio: "Empresario restaurantero en Provenza.",
+    intereses: ["Negocios", "Vinos", "Fútbol", "Viajes"],
+    nivel: "Intermedio",
+    ciudad: "Provenza, El Poblado",
+    parchar: ["Provenza", "Stadio", "Club El Rodeo"],
+    telefono: "+57 313 456 7890",
+    red_social: "@carlosgourmet"
+  },
+  {
+    id: 3,
+    nombre: "María Fernanda Ruiz",
+    email: "maria.ruiz@email.com",
+    foto: "https://example.com/maria.png",
+    bio: "Arquitecta, diseñadora de interiores en zona G.",
+    intereses: ["Diseño", "Arte", "Brunch", "Moda"],
+    nivel: "Avanzado",
+    ciudad: "Zona G, El Poblado",
+    parchar: ["Zona G", "MAMM", "Talleres creativos"],
+    telefono: "+57 314 567 8901",
+    red_social: "@maria_design"
+  },
+  {
+    id: 4,
+    nombre: "Santiago López",
+    email: "santiago.lopez@email.com",
+    foto: "https://example.com/santiago.png",
+    bio: "Desarrollador blockchain, trabaja remoto desde El Poblado.",
+    intereses: ["Cripto", "Programación", "Ciclismo", "Videojuegos"],
+    nivel: "Intermedio",
+    ciudad: "Los Balsos, El Poblado",
+    parchar: ["Coworkings", "Ciclovía", "Gaming cafes"],
+    telefono: "+57 315 678 9012"
+  },
+  {
+    id: 5,
+    nombre: "Isabella Martínez",
+    email: "isabella.martinez@email.com",
+    foto: "https://example.com/isabella.png",
+    bio: "Estudiante de medicina, vive cerca de Los Balsos.",
+    intereses: ["Medicina", "Running", "Libros", "Voluntariado"],
+    nivel: "Principiante",
+    ciudad: "Los Balsos, El Poblado",
+    parchar: ["UdeA", "Parque de El Poblado", "Bibliotecas"],
+    telefono: "+57 316 789 0123"
+  },
+  {
+    id: 6,
+    nombre: "Daniel Rojas",
+    email: "daniel.rojas@email.com",
+    foto: "https://example.com/daniel.png",
+    bio: "Chef en restaurante de comida italiana.",
+    intereses: ["Cocina", "Vinos", "Fotografía culinaria", "Viajes"],
+    nivel: "Avanzado",
+    ciudad: "Castropol, El Poblado",
+    parchar: ["Restaurantes", "Clases de cocina", "Ferias gastronómicas"],
+    telefono: "+57 317 890 1234"
+  },
+
+  // Laureles/Estadio (5 personas)
+  {
+    id: 7,
+    nombre: "Andrés Vélez",
+    email: "andres.velez@email.com",
+    foto: "https://example.com/andres.png",
+    bio: "Ingeniero civil, vive en Laureles hace 10 años.",
+    intereses: ["Arquitectura", "Cerveza artesanal", "Fútbol", "Parques"],
+    nivel: "Avanzado",
+    ciudad: "Laureles",
+    parchar: ["La 70", "Estadio", "Parque de Laureles"],
+    telefono: "+57 318 901 2345",
+    red_social: "@andres_laureles"
+  },
+  {
+    id: 8,
+    nombre: "Camila Giraldo",
+    email: "camila.giraldo@email.com",
+    foto: "https://example.com/camila.png",
+    bio: "Psicóloga con consultorio en Belén.",
+    intereses: ["Psicología", "Yoga", "Lectura", "Meditación"],
+    nivel: "Intermedio",
+    ciudad: "Circular 1ra, Laureles",
+    parchar: ["Consultorio", "Estudio de yoga", "Cafés tranquilos"],
+    telefono: "+57 319 012 3456"
+  },
+  {
+    id: 9,
+    nombre: "Javier Cardona",
+    email: "javier.cardona@email.com",
+    foto: "https://example.com/javier.png",
+    bio: "Profesor universitario, vive cerca de la Universidad Pontificia.",
+    intereses: ["Educación", "Debate", "Cine", "Café"],
+    nivel: "Avanzado",
+    ciudad: "La 33, Laureles",
+    parchar: ["Universidades", "Cineclub", "Librerías"],
+    telefono: "+57 320 123 4567"
+  },
+  {
+    id: 10,
+    nombre: "Valentina Ospina",
+    email: "valentina.ospina@email.com",
+    foto: "https://example.com/valentina.png",
+    bio: "Diseñadora gráfica freelancer.",
+    intereses: ["Diseño", "Fotografía", "Brunch", "Mercados"],
+    nivel: "Intermedio",
+    ciudad: "Estadio, Laureles",
+    parchar: ["Coworkings", "Mercado del Río", "Talleres"],
+    telefono: "+57 321 234 5678"
+  },
+  {
+    id: 11,
+    nombre: "Tomás Herrera",
+    email: "tomas.herrera@email.com",
+    foto: "https://example.com/tomas.png",
+    bio: "Estudiante de ingeniería en la Nacional.",
+    intereses: ["Tecnología", "Deportes", "Videojuegos", "Cerveza"],
+    nivel: "Principiante",
+    ciudad: "San Joaquín, Laureles",
+    parchar: ["UNAL", "La 70", "Canchas deportivas"],
+    telefono: "+57 322 345 6789"
+  },
+
+  // Belén (4 personas)
+  {
+    id: 12,
+    nombre: "Carolina Álvarez",
+    email: "carolina.alvarez@email.com",
+    foto: "https://example.com/carolina.png",
+    bio: "Contadora en empresa familiar de Belén.",
+    intereses: ["Finanzas", "Yoga", "Cocina", "Familia"],
+    nivel: "Intermedio",
+    ciudad: "Belén",
+    parchar: ["Centro comercial", "Parques de Belén", "Estudios de yoga"],
+    telefono: "+57 323 456 7890"
+  },
+  {
+    id: 13,
+    nombre: "Esteban Ramírez",
+    email: "esteban.ramirez@email.com",
+    foto: "https://example.com/esteban.png",
+    bio: "Mecánico automotriz con taller propio.",
+    intereses: ["Autos", "Fútbol", "Parilla", "Música vallenata"],
+    nivel: "Principiante",
+    ciudad: "Belén Rincón",
+    parchar: ["Taller", "Canchas sintéticas", "Parques"],
+    telefono: "+57 324 567 8901"
+  },
+  {
+    id: 14,
+    nombre: "Luisa Fernanda",
+    email: "luisa.fernanda@email.com",
+    foto: "https://example.com/luisa.png",
+    bio: "Dueña de tienda de ropa en Belén.",
+    intereses: ["Moda", "Emprendimiento", "Familia", "Iglesia"],
+    nivel: "Intermedio",
+    ciudad: "Belén Los Alpes",
+    parchar: ["Tienda", "Centro comercial", "Parque Belén"],
+    telefono: "+57 325 678 9012"
+  },
+  {
+    id: 15,
+    nombre: "Ricardo Pérez",
+    email: "ricardo.perez@email.com",
+    foto: "https://example.com/ricardo.png",
+    bio: "Conductor de bus urbano.",
+    intereses: ["Transporte", "Música", "Fútbol", "Familia"],
+    nivel: "Principiante",
+    ciudad: "Belén",
+    parchar: ["Terminal", "Canchas", "Parques"],
+    telefono: "+57 326 789 0123"
+  },
+
+  // Centro (4 personas)
+  {
+    id: 16,
+    nombre: "Sofía Mendoza",
+    email: "sofia.mendoza@email.com",
+    foto: "https://example.com/sofia.png",
+    bio: "Gestora cultural en el Museo de Arte Moderno.",
+    intereses: ["Cultura", "Arte contemporáneo", "Eventos", "Fotografía"],
+    nivel: "Intermedio",
+    ciudad: "La Candelaria, Centro",
+    parchar: ["MAMM", "Plaza Botero", "Centro cultural"],
+    telefono: "+57 327 890 1234"
+  },
+  {
+    id: 17,
+    nombre: "Miguel Ángel Rojas",
+    email: "miguel.rojas@email.com",
+    foto: "https://example.com/miguel.png",
+    bio: "Guía turístico especializado en el Centro histórico.",
+    intereses: ["Historia", "Turismo", "Fotografía", "Caminatas"],
+    nivel: "Avanzado",
+    ciudad: "Bomboná, Centro",
+    parchar: ["Free tours", "Paseos históricos", "Miradores"],
+    telefono: "+57 328 901 2345"
+  },
+  {
+    id: 18,
+    nombre: "Daniela Castro",
+    email: "daniela.castro@email.com",
+    foto: "https://example.com/daniela.png",
+    bio: "Estudiante de arquitectura en la UdeA.",
+    intereses: ["Arquitectura", "Dibujo", "Fotografía urbana", "Libros"],
+    nivel: "Intermedio",
+    ciudad: "San Benito, Centro",
+    parchar: ["Biblioteca UdeA", "Talleres", "Cafés del centro"],
+    telefono: "+57 329 012 3456"
+  },
+  {
+    id: 19,
+    nombre: "Juan Pablo Mejía",
+    email: "juan.mejia@email.com",
+    foto: "https://example.com/juan.png",
+    bio: "Vendedor ambulante en el centro.",
+    intereses: ["Ventas", "Fútbol", "Música", "Familia"],
+    nivel: "Principiante",
+    ciudad: "Guayaquil, Centro",
+    parchar: ["Centro comercial", "Parque Berrío", "Mercado de Guayaquil"],
+    telefono: "+57 330 123 4567"
+  },
+
+  // Comuna 13 - San Javier (4 personas)
+  {
+    id: 20,
+    nombre: "Iván Duque",
+    email: "ivan.duque@email.com",
+    foto: "https://example.com/ivan.png",
+    bio: "Guía de turismo en Comuna 13.",
+    intereses: ["Turismo", "Historia", "Grafiti", "Cultura"],
+    nivel: "Avanzado",
+    ciudad: "Comuna 13, San Javier",
+    parchar: ["Comuna 13", "Miradores", "Talleres de arte"],
+    telefono: "+57 331 234 5678",
+    red_social: "@ivan_tours"
+  },
+  {
+    id: 21,
+    nombre: "Jessica López",
+    email: "jessica.lopez@email.com",
+    foto: "https://example.com/jessica.png",
+    bio: "Artista de grafiti y muralista.",
+    intereses: ["Arte urbano", "Pintura", "Música hip-hop", "Danza"],
+    nivel: "Intermedio",
+    ciudad: "San Javier",
+    parchar: ["Talleres de arte", "Murales", "Eventos culturales"],
+    telefono: "+57 332 345 6789"
+  },
+  {
+    id: 22,
+    nombre: "Kevin Martínez",
+    email: "kevin.martinez@email.com",
+    foto: "https://example.com/kevin.png",
+    bio: "Breakdancer y coreógrafo.",
+    intereses: ["Breakdance", "Música", "Deporte", "Cultura urbana"],
+    nivel: "Principiante",
+    ciudad: "San Javier",
+    parchar: ["Plazas públicas", "Talleres de baile", "Batallas de breakdance"],
+    telefono: "+57 333 456 7890"
+  },
+  {
+    id: 23,
+    nombre: "Lina Morales",
+    email: "lina.morales@email.com",
+    foto: "https://example.com/lina.png",
+    bio: "Líder comunitaria y gestora social.",
+    intereses: ["Liderazgo", "Comunidad", "Educación", "Deporte"],
+    nivel: "Intermedio",
+    ciudad: "Comuna 13, San Javier",
+    parchar: ["Juntas de acción comunal", "Escuelas", "Canchas"],
+    telefono: "+57 334 567 8901"
+  },
+
+  // Robledo (4 personas)
+  {
+    id: 24,
+    nombre: "Luis Fernando Gutiérrez",
+    email: "luis.gutierrez@email.com",
+    foto: "https://example.com/luis.png",
+    bio: "Profesor en colegio público de Robledo.",
+    intereses: ["Educación", "Lectura", "Senderismo", "Jardinería"],
+    nivel: "Intermedio",
+    ciudad: "Robledo",
+    parchar: ["Colegio", "Cerro El Volador", "Bibliotecas comunitarias"],
+    telefono: "+57 335 678 9012"
+  },
+  {
+    id: 25,
+    nombre: "Patricia Morales",
+    email: "patricia.morales@email.com",
+    foto: "https://example.com/patricia.png",
+    bio: "Ama de casa, líder comunitaria en Robledo.",
+    intereses: ["Comunidad", "Cocina tradicional", "Manualidades", "Iglesia"],
+    nivel: "Principiante",
+    ciudad: "Robledo",
+    parchar: ["Juntas de acción comunal", "Iglesia", "Parques"],
+    telefono: "+57 336 789 0123"
+  },
+  {
+    id: 26,
+    nombre: "Óscar Valencia",
+    email: "oscar.valencia@email.com",
+    foto: "https://example.com/oscar.png",
+    bio: "Carpintero con taller familiar.",
+    intereses: ["Carpintería", "Deporte", "Familia", "Música"],
+    nivel: "Principiante",
+    ciudad: "Robledo",
+    parchar: ["Taller", "Canchas", "Parques"],
+    telefono: "+57 337 890 1234"
+  },
+  {
+    id: 27,
+    nombre: "Nancy Rojas",
+    email: "nancy.rojas@email.com",
+    foto: "https://example.com/nancy.png",
+    bio: "Dueña de panadería tradicional.",
+    intereses: ["Panadería", "Cocina", "Familia", "Negocios"],
+    nivel: "Intermedio",
+    ciudad: "Robledo",
+    parchar: ["Panadería", "Mercado", "Parque del barrio"],
+    telefono: "+57 338 901 2345"
+  },
+
+  // Buenos Aires (Comuna 9) (4 personas)
+  {
+    id: 28,
+    nombre: "Diana García",
+    email: "diana.garcia@email.com",
+    foto: "https://example.com/diana.png",
+    bio: "Líder social en comuna 9 - Buenos Aires.",
+    intereses: ["Liderazgo comunitario", "Danza", "Teatro", "Educación"],
+    nivel: "Avanzado",
+    ciudad: "Buenos Aires, Comuna 9",
+    parchar: ["JAC", "Escuelas de danza", "Teatros comunitarios"],
+    telefono: "+57 339 012 3456"
+  },
+  {
+    id: 29,
+    nombre: "Raúl Pérez",
+    email: "raul.perez@email.com",
+    foto: "https://example.com/raul.png",
+    bio: "DJ y productor musical del barrio.",
+    intereses: ["Música", "Producción", "Baile", "Cultura urbana"],
+    nivel: "Intermedio",
+    ciudad: "Buenos Aires",
+    parchar: ["Estudios de grabación", "Bailaderos", "Eventos culturales"],
+    telefono: "+57 340 123 4567"
+  },
+  {
+    id: 30,
+    nombre: "Samuel Ochoa",
+    email: "samuel.ochoa@email.com",
+    foto: "https://example.com/samuel.png",
+    bio: "Estudiante de mecánica industrial.",
+    intereses: ["Mecánica", "Motocicletas", "Deporte", "Videojuegos"],
+    nivel: "Principiante",
+    ciudad: "Buenos Aires",
+    parchar: ["Talleres", "Canchas", "Cybercafés"],
+    telefono: "+57 341 234 5678"
+  },
+  {
+    id: 31,
+    nombre: "Tatiana Restrepo",
+    email: "tatiana.restrepo@email.com",
+    foto: "https://example.com/tatiana.png",
+    bio: "Costurera en taller de confecciones.",
+    intereses: ["Costura", "Moda", "Familia", "Iglesia"],
+    nivel: "Principiante",
+    ciudad: "Buenos Aires",
+    parchar: ["Taller", "Iglesia", "Parque"],
+    telefono: "+57 342 345 6789"
+  },
+
+  // Castilla (Comuna 5) (4 personas)
+  {
+    id: 32,
+    nombre: "Angela Montoya",
+    email: "angela.montoya@email.com",
+    foto: "https://example.com/angela.png",
+    bio: "Costurera en taller de confecciones.",
+    intereses: ["Costura", "Moda", "Familia", "Iglesia"],
+    nivel: "Principiante",
+    ciudad: "Castilla",
+    parchar: ["Taller", "Iglesia", "Parque del barrio"],
+    telefono: "+57 343 456 7890"
+  },
+  {
+    id: 33,
+    nombre: "Felipe Jaramillo",
+    email: "felipe.jaramillo@email.com",
+    foto: "https://example.com/felipe.png",
+    bio: "Estudiante de mecánica automotriz.",
+    intereses: ["Mecánica", "Motocicletas", "Música", "Deporte"],
+    nivel: "Principiante",
+    ciudad: "Castilla",
+    parchar: ["Taller mecánico", "Pista de motocross", "Canchas"],
+    telefono: "+57 344 567 8901"
+  },
+  {
+    id: 34,
+    nombre: "Gabriel Torres",
+    email: "gabriel.torres@email.com",
+    foto: "https://example.com/gabriel.png",
+    bio: "Vendedor en almacén de electrodomésticos.",
+    intereses: ["Ventas", "Tecnología", "Fútbol", "Familia"],
+    nivel: "Intermedio",
+    ciudad: "Castilla",
+    parchar: ["Almacén", "Canchas", "Parques"],
+    telefono: "+57 345 678 9012"
+  },
+  {
+    id: 35,
+    nombre: "Hilda Sánchez",
+    email: "hilda.sanchez@email.com",
+    foto: "https://example.com/hilda.png",
+    bio: "Cocinera en comedor comunitario.",
+    intereses: ["Cocina", "Comunidad", "Familia", "Tradiciones"],
+    nivel: "Principiante",
+    ciudad: "Castilla",
+    parchar: ["Comedor comunitario", "Mercado", "Parque"],
+    telefono: "+57 346 789 0123"
+  },
+
+  // Bello (Área Metropolitana) (6 personas)
+  {
+    id: 36,
+    nombre: "Jorge Iván Torres",
+    email: "jorge.torres@email.com",
+    foto: "https://example.com/jorge.png",
+    bio: "Operario en fábrica textil de Bello.",
+    intereses: ["Fútbol", "Música", "Familia", "Parques"],
+    nivel: "Principiante",
+    ciudad: "Bello",
+    parchar: ["Canchas", "Parque de Bello", "Centros comerciales"],
+    telefono: "+57 347 890 1234"
+  },
+  {
+    id: 37,
+    nombre: "Mónica Londoño",
+    email: "monica.londono@email.com",
+    foto: "https://example.com/monica.png",
+    bio: "Estilista con salón de belleza propio.",
+    intereses: ["Belleza", "Moda", "Redes sociales", "Emprendimiento"],
+    nivel: "Intermedio",
+    ciudad: "Bello",
+    parchar: ["Salón", "Centro comercial", "Eventos de moda"],
+    telefono: "+57 348 901 2345"
+  },
+  {
+    id: 38,
+    nombre: "Nicolás Vargas",
+    email: "nicolas.vargas@email.com",
+    foto: "https://example.com/nicolas.png",
+    bio: "Estudiante de derecho en la UdeM.",
+    intereses: ["Derecho", "Debate", "Lectura", "Política"],
+    nivel: "Intermedio",
+    ciudad: "Bello",
+    parchar: ["Universidad", "Bibliotecas", "Cafés"],
+    telefono: "+57 349 012 3456"
+  },
+  {
+    id: 39,
+    nombre: "Olga Piedrahita",
+    email: "olga.piedrahita@email.com",
+    foto: "https://example.com/olga.png",
+    bio: "Ama de casa, vende arepas los fines de semana.",
+    intereses: ["Cocina", "Familia", "Televisión", "Iglesia"],
+    nivel: "Principiante",
+    ciudad: "Bello",
+    parchar: ["Casa", "Parque", "Iglesia"],
+    telefono: "+57 350 123 4567"
+  },
+  {
+    id: 40,
+    nombre: "Pablo Escobar",
+    email: "pablo.escobar@email.com",
+    foto: "https://example.com/pablo.png",
+    bio: "Historiador local de Bello.",
+    intereses: ["Historia", "Documentales", "Lectura", "Café"],
+    nivel: "Avanzado",
+    ciudad: "Bello",
+    parchar: ["Archivo histórico", "Bibliotecas", "Cafés literarios"],
+    telefono: "+57 351 234 5678"
+  },
+  {
+    id: 41,
+    nombre: "Queena Ramírez",
+    email: "queena.ramirez@email.com",
+    foto: "https://example.com/queena.png",
+    bio: "Bailarina profesional de salsa.",
+    intereses: ["Danza", "Salsa", "Música latina", "Deporte"],
+    nivel: "Intermedio",
+    ciudad: "Bello",
+    parchar: ["Academias de baile", "Bailaderos", "Eventos culturales"],
+    telefono: "+57 352 345 6789"
+  },
+
+  // Envigado (Área Metropolitana) (6 personas)
+  {
+    id: 42,
+    nombre: "Alejandro Suárez",
+    email: "alejandro.suarez@email.com",
+    foto: "https://example.com/alejandro.png",
+    bio: "Gerente de sucursal bancaria en Envigado.",
+    intereses: ["Finanzas", "Golf", "Vinos", "Viajes"],
+    nivel: "Avanzado",
+    ciudad: "Envigado",
+    parchar: ["Club Campestre", "Restaurantes", "Parque Envigado"],
+    telefono: "+57 353 456 7890"
+  },
+  {
+    id: 43,
+    nombre: "Catalina Restrepo",
+    email: "catalina.restrepo@email.com",
+    foto: "https://example.com/catalina.png",
+    bio: "Nutricionista deportiva con consultorio.",
+    intereses: ["Nutrición", "Deporte", "Cocina saludable", "Wellness"],
+    nivel: "Intermedio",
+    ciudad: "Envigado",
+    parchar: ["Gimnasios", "Consultorio", "Ferias orgánicas"],
+    telefono: "+57 354 567 8901"
+  },
+  {
+    id: 44,
+    nombre: "David Zapata",
+    email: "david.zapata@email.com",
+    foto: "https://example.com/david.png",
+    bio: "Ingeniero de sistemas en empresa tech.",
+    intereses: ["Programación", "Tecnología", "Videojuegos", "Ciclismo"],
+    nivel: "Avanzado",
+    ciudad: "Envigado",
+    parchar: ["Oficina", "Ciclovías", "Gaming meetups"],
+    telefono: "+57 355 678 9012"
+  },
+  {
+    id: 45,
+    nombre: "Elena Morales",
+    email: "elena.morales@email.com",
+    foto: "https://example.com/elena.png",
+    bio: "Diseñadora de interiores.",
+    intereses: ["Diseño", "Arte", "Decoración", "Jardinería"],
+    nivel: "Intermedio",
+    ciudad: "Envigado",
+    parchar: ["Tiendas de diseño", "Talleres", "Ferias de arte"],
+    telefono: "+57 356 789 0123"
+  },
+  {
+    id: 46,
+    nombre: "Fernando Gómez",
+    email: "fernando.gomez@email.com",
+    foto: "https://example.com/fernando.png",
+    bio: "Estudiante de medicina.",
+    intereses: ["Medicina", "Deporte", "Música", "Cine"],
+    nivel: "Principiante",
+    ciudad: "Envigado",
+    parchar: ["Universidad", "Gimnasio", "Cines"],
+    telefono: "+57 357 890 1234"
+  },
+  {
+    id: 47,
+    nombre: "Gloria Sánchez",
+    email: "gloria.sanchez@email.com",
+    foto: "https://example.com/gloria.png",
+    bio: "Ama de casa, voluntaria en fundación animalista.",
+    intereses: ["Animales", "Voluntariado", "Cocina", "Jardinería"],
+    nivel: "Principiante",
+    ciudad: "Envigado",
+    parchar: ["Fundación", "Parque", "Mercados orgánicos"],
+    telefono: "+57 358 901 2345"
+  },
+
+  // Itagüí (Área Metropolitana) (6 personas)
+  {
+    id: 48,
+    nombre: "Rafael Núñez",
+    email: "rafael.nunez@email.com",
+    foto: "https://example.com/rafael.png",
+    bio: "Fontanero con negocio propio.",
+    intereses: ["Fontanería", "Deporte", "Familia", "Música"],
+    nivel: "Principiante",
+    ciudad: "Itagüí",
+    parchar: ["Taller", "Canchas", "Parques familiares"],
+    telefono: "+57 359 012 3456"
+  },
+  {
+    id: 49,
+    nombre: "Sandra Milena",
+    email: "sandra.milena@email.com",
+    foto: "https://example.com/sandra.png",
+    bio: "Peluquera canina con negocio propio.",
+    intereses: ["Animales", "Emprendimiento", "Belleza", "Naturaleza"],
+    nivel: "Intermedio",
+    ciudad: "Itagüí",
+    parchar: ["Peluquería canina", "Parques para perros", "Eventos pet-friendly"],
+    telefono: "+57 360 123 4567"
+  },
+  {
+    id: 50,
+    nombre: "Tatiana López",
+    email: "tatiana.lopez@email.com",
+    foto: "https://example.com/tatiana.png",
+    bio: "Estudiante de derecho, activista social.",
+    intereses: ["Derecho", "Activismo", "Lectura", "Debate"],
+    nivel: "Principiante",
+    ciudad: "Itagüí",
+    parchar: ["Universidad", "Organizaciones sociales", "Foros de debate"],
+    telefono: "+57 361 234 5678"
+  }
+];
