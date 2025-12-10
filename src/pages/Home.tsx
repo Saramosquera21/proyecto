@@ -2,9 +2,11 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Menu from "../components/Menu"
 import { lugares } from "../lib/lugaresData"
+import { useUserPhoto } from "../hooks/useUserPhoto" // Importa el hook
 
 export default function Home() {
   const navigate = useNavigate()
+  const { userPhoto } = useUserPhoto() // Usa el hook
 
   // Estado del feed de lugares
   const [feed, setFeed] = useState(lugares.slice(0, 15))
@@ -43,6 +45,41 @@ export default function Home() {
           background: "radial-gradient(circle at 20% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 50%)"
         }} />
         
+        {/* Foto del usuario - Añadida aquí */}
+        {userPhoto && (
+          <div style={{
+            position: "absolute",
+            top: "20px",
+            right: "20px",
+            zIndex: 10
+          }}>
+            <div style={{
+              textAlign: "center"
+            }}>
+              <img 
+                src={userPhoto} 
+                alt="Tu foto" 
+                style={{ 
+                  width: '60px', 
+                  height: '60px', 
+                  borderRadius: '50%', 
+                  objectFit: 'cover',
+                  border: '2px solid #3b82f6',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)'
+                }}
+              />
+              <p style={{ 
+                marginTop: '5px', 
+                color: '#cbd5e1',
+                fontSize: '12px',
+                fontWeight: 500
+              }}>
+                Tu foto
+              </p>
+            </div>
+          </div>
+        )}
+        
         <h1 style={{
           margin: "0 0 15px 0",
           fontSize: "48px",
@@ -56,7 +93,7 @@ export default function Home() {
           position: "relative",
           zIndex: 1
         }}>
-          ¡Bienvenido al Parche!
+          ¡Bienvenido a Dropen!
         </h1>
         
         <p style={{
@@ -144,18 +181,7 @@ export default function Home() {
               alignItems: "center",
               gap: "12px"
             }}>
-              <span style={{
-                width: "40px",
-                height: "40px",
-                backgroundColor: "#3b82f6",
-                borderRadius: "12px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "20px"
-              }}>
-                🌆
-              </span>
+
               Lugares Recomendados
             </h2>
             

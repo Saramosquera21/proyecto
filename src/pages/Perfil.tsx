@@ -22,6 +22,45 @@ interface PerfilUsuario {
   siguiendo?: string[]
 }
 
+// Hook personalizado para manejar la foto del usuario
+const useUserPhoto = () => {
+  const [userPhoto, setUserPhotoState] = useState<string | null>(null)
+
+  // Cargar foto al montar
+  useEffect(() => {
+    loadUserPhoto()
+  }, [])
+
+  const loadUserPhoto = () => {
+    const userId = localStorage.getItem('current_user_id') || 'current_user'
+    const savedPhoto = localStorage.getItem(`user_photo_${userId}`)
+    if (savedPhoto) {
+      setUserPhotoState(savedPhoto)
+      return savedPhoto
+    }
+    return null
+  }
+
+  const saveUserPhoto = (photo: string) => {
+    const userId = localStorage.getItem('current_user_id') || 'current_user'
+    localStorage.setItem(`user_photo_${userId}`, photo)
+    setUserPhotoState(photo)
+  }
+
+  const clearUserPhoto = () => {
+    const userId = localStorage.getItem('current_user_id') || 'current_user'
+    localStorage.removeItem(`user_photo_${userId}`)
+    setUserPhotoState(null)
+  }
+
+  return {
+    userPhoto,
+    saveUserPhoto,
+    clearUserPhoto,
+    loadUserPhoto
+  }
+}
+
 export default function Perfil() {
   const [perfil, setPerfil] = useState<PerfilUsuario | null>(null)
   const [mensaje, setMensaje] = useState(
@@ -29,8 +68,11 @@ export default function Perfil() {
   )
   const [cargandoFoto, setCargandoFoto] = useState(false)
   const navigate = useNavigate()
+  
+  // Usar el hook de foto
+  const { userPhoto, saveUserPhoto, loadUserPhoto } = useUserPhoto()
 
-  // Cargar perfil
+  // Cargar perfil CON localStorage check
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
@@ -42,7 +84,20 @@ export default function Perfil() {
         })
         const data = await res.json()
         if (res.ok) {
-          setPerfil(data.usuario || data.perfil)
+          const perfilCargado = data.usuario || data.perfil;
+          
+          // GUARDAR ID DEL USUARIO EN localStorage
+          if (perfilCargado.id) {
+            localStorage.setItem('current_user_id', perfilCargado.id.toString())
+          }
+          
+          // CARGAR FOTO DEL LOCALSTORAGE SI EXISTE
+          const loadedPhoto = loadUserPhoto()
+          if (loadedPhoto) {
+            perfilCargado.foto = loadedPhoto
+          }
+          
+          setPerfil(perfilCargado)
         } else {
           setMensaje(data.message || "Error al cargar perfil")
         }
@@ -52,7 +107,7 @@ export default function Perfil() {
     }
 
     cargarPerfil()
-  }, [])
+  }, [loadUserPhoto])
 
   // Aplica el tema globalmente
   useEffect(() => {
@@ -62,73 +117,98 @@ export default function Perfil() {
     root.classList.add(temaActual === "oscuro" ? "dark" : "light")
   }, [perfil?.tema])
 
+  // CORREGIDO: Guardar foto en localStorage persistente
   const handleFotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || !e.target.files[0]) return
+    if (!e.target.files || !e.target.files[0]) return;
     
-    const file = e.target.files[0]
-    const token = localStorage.getItem("token")
+    const file = e.target.files[0];
+    const token = localStorage.getItem("token");
     
     if (!token) {
-      setMensaje("No hay sesión iniciada")
-      return
+      setMensaje("No hay sesión iniciada");
+      return;
     }
 
-    setCargandoFoto(true)
+    // Validación de tamaño (2MB máximo para mejor rendimiento)
+    if (file.size > 2 * 1024 * 1024) {
+      setMensaje("La imagen no debe superar 2MB");
+      e.target.value = "";
+      return;
+    }
+
+    // Validación de tipo
+    const tiposPermitidos = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    if (!tiposPermitidos.includes(file.type)) {
+      setMensaje("Formato no válido. Usa JPEG, PNG, GIF o WebP");
+      e.target.value = "";
+      return;
+    }
+
+    setCargandoFoto(true);
     
     try {
-      const formData = new FormData()
-      formData.append("foto", file)
-
-      const res = await fetch("http://localhost:3000/api/upload-foto", {
-        method: "POST",
-        headers: { 
-          Authorization: `Bearer ${token}`
-        },
-        body: formData
-      })
-
-      const data = await res.json()
+      const reader = new FileReader();
       
-      if (res.ok && data.foto) {
-        // Actualizar el perfil con la nueva foto
-        setPerfil(prev => prev ? { ...prev, foto: data.foto } : null)
-        setMensaje("Foto actualizada correctamente ✅")
-        
-        // También actualizar en el servidor el perfil completo
-        await actualizarPerfilEnServidor(data.foto, token)
-      } else {
-        setMensaje(data.message || "Error al subir la foto")
-      }
-    } catch (error) {
-      console.error("Error:", error)
-      setMensaje("Error al subir la foto")
-    } finally {
-      setCargandoFoto(false)
-      // Limpiar el input para permitir seleccionar la misma foto de nuevo
-      e.target.value = ""
-    }
-  }
+      reader.onload = async (event) => {
+        try {
+          const base64String = event.target?.result as string;
+          
+          if (!base64String) {
+            throw new Error("No se pudo leer la imagen");
+          }
+          
+          // 1. GUARDAR EN LOCALSTORAGE PERSISTENTE (usando el hook)
+          saveUserPhoto(base64String);
+          
+          // 2. Actualizar el estado local inmediatamente
+          setPerfil(prev => prev ? { 
+            ...prev, 
+            foto: base64String 
+          } : null);
+          
+          // 3. Enviar al servidor solo un marcador
+          const updateRes = await fetch("http://localhost:3000/api/perfil", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ 
+              foto: "uploaded_by_user", // Solo un marcador
+              foto_actualizada: true    // Indicador
+            })
+          });
 
-  // Función para actualizar el perfil en el servidor con la nueva foto
-  const actualizarPerfilEnServidor = async (fotoUrl: string, token: string) => {
-    try {
-      const res = await fetch("http://localhost:3000/api/perfil", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ foto: fotoUrl })
-      })
+          if (updateRes.ok) {
+            setMensaje("Foto guardada ✅ (disponible en toda la app)");
+          } else {
+            setMensaje("Foto guardada localmente ✅");
+          }
+          
+        } catch (error: any) {
+          console.error("Error:", error);
+          setMensaje("Error al procesar la foto");
+        } finally {
+          setCargandoFoto(false);
+          if (e.target) e.target.value = "";
+        }
+      };
       
-      if (!res.ok) {
-        const data = await res.json()
-        console.error("Error al actualizar perfil:", data.message)
-      }
-    } catch (error) {
-      console.error("Error:", error)
+      reader.onerror = () => {
+        setMensaje("Error al leer la imagen");
+        setCargandoFoto(false);
+        if (e.target) e.target.value = "";
+      };
+      
+      reader.readAsDataURL(file);
+      
+    } catch (error: any) {
+      console.error("Error general:", error);
+      setMensaje("Error: " + error.message);
+      setCargandoFoto(false);
+      if (e.target) e.target.value = "";
     }
-  }
+  };
 
   const actualizarPerfil = async () => {
     const token = localStorage.getItem("token")
@@ -155,11 +235,37 @@ export default function Perfil() {
     }
   }
 
+  // Función para cerrar sesión limpiando todo
+  const handleCerrarSesion = () => {
+    const { clearUserPhoto } = useUserPhoto();
+    clearUserPhoto();
+    localStorage.removeItem('current_user_id');
+    localStorage.removeItem("token");
+    navigate("/");
+  }
+
   if (mensaje === "No hay sesión iniciada") return <p style={{ color: "#94a3b8", textAlign: "center", marginTop: "50px" }}>{mensaje}</p>
   if (!perfil) return <p style={{ color: "#94a3b8", textAlign: "center", marginTop: "50px" }}>Cargando perfil...</p>
 
-  // URL de imagen por defecto si no hay foto
-  const fotoUrl = perfil.foto || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop&crop=face"
+  // URL de imagen - ORDEN DE PRIORIDAD:
+  let fotoUrl = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop&crop=face";
+
+  // 1. Prioridad: Foto del hook (la más reciente)
+  if (userPhoto) {
+    fotoUrl = userPhoto;
+  }
+  // 2. Prioridad: Foto del perfil (Base64)
+  else if (perfil.foto && perfil.foto.startsWith('data:image')) {
+    fotoUrl = perfil.foto;
+  }
+  // 3. Prioridad: Buscar en localStorage como respaldo
+  else {
+    const userId = localStorage.getItem('current_user_id') || 'current_user';
+    const cachedPhoto = localStorage.getItem(`user_photo_${userId}`);
+    if (cachedPhoto) {
+      fotoUrl = cachedPhoto;
+    }
+  }
 
   return (
     <div style={{
@@ -301,33 +407,56 @@ export default function Perfil() {
               textAlign: "center"
             }}>
               <div style={{ position: "relative", display: "inline-block" }}>
-                <img
-                  src={fotoUrl}
-                  alt="Foto de perfil"
-                  style={{
-                    width: "180px",
-                    height: "180px",
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                    border: "4px solid #3b82f6",
-                    boxShadow: "0 0 30px rgba(59, 130, 246, 0.3)",
-                    margin: "0 auto 20px",
-                    opacity: cargandoFoto ? 0.7 : 1,
-                    transition: "opacity 0.3s ease"
-                  }}
-                />
-                {cargandoFoto && (
-                  <div style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    color: "#60a5fa",
-                    fontWeight: 600
-                  }}>
-                    Subiendo...
-                  </div>
-                )}
+                <div style={{
+                  width: "180px",
+                  height: "180px",
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  border: "4px solid #3b82f6",
+                  boxShadow: "0 0 30px rgba(59, 130, 246, 0.3)",
+                  margin: "0 auto 20px",
+                  position: "relative"
+                }}>
+                  <img
+                    src={fotoUrl}
+                    alt="Tu foto de perfil"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      opacity: cargandoFoto ? 0.5 : 1,
+                      transition: "opacity 0.3s ease"
+                    }}
+                    onError={(e) => {
+                      // Si falla la imagen, usar una por defecto
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&h=400&fit=crop&crop=face";
+                    }}
+                  />
+                  
+                  {cargandoFoto && (
+                    <div style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "rgba(15, 23, 42, 0.7)",
+                      zIndex: 2
+                    }}>
+                      <div style={{
+                        color: "#60a5fa",
+                        fontWeight: 600,
+                        textAlign: "center"
+                      }}>
+                        <div style={{ marginBottom: "8px" }}>⏳</div>
+                        <div>Subiendo...</div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
               
               <div style={{ position: "relative" }}>
@@ -371,7 +500,15 @@ export default function Perfil() {
                   color: "#94a3b8",
                   marginTop: "8px"
                 }}>
-                  JPEG, PNG o GIF (max 5MB)
+                  JPEG, PNG o GIF (max 2MB)
+                </div>
+                <div style={{
+                  fontSize: "10px",
+                  color: "#4ade80",
+                  marginTop: "4px",
+                  fontStyle: "italic"
+                }}>
+                  La foto se guardará en toda la aplicación
                 </div>
               </div>
             </div>
@@ -956,10 +1093,7 @@ export default function Perfil() {
               </button>
 
               <button
-                onClick={() => {
-                  localStorage.removeItem("token")
-                  navigate("/")
-                }}
+                onClick={handleCerrarSesion}
                 style={{
                   padding: "16px 32px",
                   backgroundColor: "rgba(239, 68, 68, 0.1)",

@@ -4,7 +4,7 @@ interface ConsejosLugarProps {
 
 export default function ConsejosLugar({ etiquetas }: ConsejosLugarProps) {
   const obtenerConsejos = (): string[] => {
-  const consejos: string[] = []
+    const consejos: string[] = []
     
     // Consejos generales para todos los lugares
     consejos.push("Respeta siempre al personal y a los demás visitantes.")
@@ -184,14 +184,237 @@ export default function ConsejosLugar({ etiquetas }: ConsejosLugarProps) {
 
   if (consejos.length === 0) return null
 
-return (
-  <div className="space-y-2">
-    {consejos.map((consejo, index) => (
-      <p key={index} className="text-sm text-gray-700 dark:text-gray-300">
-        {consejo}
-      </p>
-    ))}
-  </div>
-)
+  return (
+    <div style={{
+      background: "linear-gradient(145deg, #1e293b, #0f172a)",
+      borderRadius: "16px",
+      border: "1px solid #334155",
+      padding: "25px",
+      margin: "20px 0",
+      position: "relative",
+      overflow: "hidden"
+    }}>
+      {/* Línea decorativa */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        height: "4px",
+        background: "linear-gradient(90deg, #3b82f6, #8b5cf6, #d946ef)",
+        borderRadius: "16px 16px 0 0"
+      }} />
 
+      {/* Icono y título */}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        marginBottom: "20px"
+      }}>
+        <div style={{
+          width: "40px",
+          height: "40px",
+          background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+          borderRadius: "12px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "white",
+          fontSize: "20px",
+          boxShadow: "0 4px 15px rgba(59, 130, 246, 0.3)"
+        }}>
+          💡
+        </div>
+        <h3 style={{
+          margin: 0,
+          fontSize: "20px",
+          fontWeight: 700,
+          color: "#f1f5f9",
+          background: "linear-gradient(90deg, #60a5fa, #a78bfa)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text"
+        }}>
+          Consejos para tu visita
+        </h3>
+      </div>
+
+      {/* Badge con número de consejos */}
+      <div style={{
+        display: "inline-block",
+        padding: "6px 12px",
+        background: "rgba(34, 197, 94, 0.15)",
+        color: "#4ade80",
+        borderRadius: "20px",
+        fontSize: "12px",
+        fontWeight: 600,
+        border: "1px solid rgba(34, 197, 94, 0.3)",
+        marginBottom: "20px",
+        letterSpacing: "0.5px"
+      }}>
+        {consejos.length} consejos personalizados
+      </div>
+
+      {/* Lista de consejos */}
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "15px"
+      }}>
+        {consejos.map((consejo, index) => (
+          <div
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "12px",
+              padding: "16px",
+              background: "rgba(30, 41, 59, 0.5)",
+              borderRadius: "12px",
+              border: "1px solid #475569",
+              transition: "all 0.3s ease",
+              position: "relative",
+              overflow: "hidden"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateX(5px)"
+              e.currentTarget.style.background = "rgba(59, 130, 246, 0.1)"
+              e.currentTarget.style.borderColor = "#3b82f6"
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateX(0)"
+              e.currentTarget.style.background = "rgba(30, 41, 59, 0.5)"
+              e.currentTarget.style.borderColor = "#475569"
+            }}
+          >
+            {/* Número del consejo */}
+            <div style={{
+              minWidth: "28px",
+              height: "28px",
+              background: "linear-gradient(135deg, #8b5cf6, #d946ef)",
+              borderRadius: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "white",
+              fontSize: "14px",
+              fontWeight: 700,
+              flexShrink: 0,
+              boxShadow: "0 4px 10px rgba(139, 92, 246, 0.3)"
+            }}>
+              {index + 1}
+            </div>
+
+            {/* Texto del consejo */}
+            <p style={{
+              margin: 0,
+              fontSize: "15px",
+              color: "#cbd5e1",
+              lineHeight: "1.5",
+              flex: 1
+            }}>
+              {consejo}
+            </p>
+
+            {/* Icono decorativo */}
+            <div style={{
+              color: "#94a3b8",
+              fontSize: "18px",
+              opacity: 0.5,
+              marginLeft: "10px"
+            }}>
+              👁️
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pie de sección */}
+      <div style={{
+        marginTop: "25px",
+        paddingTop: "20px",
+        borderTop: "1px solid #334155",
+        textAlign: "center"
+      }}>
+        <p style={{
+          margin: 0,
+          fontSize: "13px",
+          color: "#94a3b8",
+          fontStyle: "italic",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px"
+        }}>
+          <span>⭐</span>
+          Estos consejos están personalizados según las etiquetas del lugar
+          <span>⭐</span>
+        </p>
+        
+        {/* Etiquetas aplicadas */}
+        <div style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "8px",
+          justifyContent: "center",
+          marginTop: "15px"
+        }}>
+          {etiquetas.slice(0, 5).map((etiqueta, idx) => (
+            <span 
+              key={idx}
+              style={{
+                background: "rgba(139, 92, 246, 0.1)",
+                color: "#a78bfa",
+                padding: "6px 12px",
+                borderRadius: "20px",
+                fontSize: "12px",
+                fontWeight: 500,
+                border: "1px solid rgba(139, 92, 246, 0.3)"
+              }}
+            >
+              {etiqueta}
+            </span>
+          ))}
+          {etiquetas.length > 5 && (
+            <span style={{
+              background: "rgba(100, 116, 139, 0.2)",
+              color: "#94a3b8",
+              padding: "6px 12px",
+              borderRadius: "20px",
+              fontSize: "12px",
+              fontWeight: 500
+            }}>
+              +{etiquetas.length - 5} más
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Efectos de fondo */}
+      <div style={{
+        position: "absolute",
+        top: "50%",
+        right: "-50px",
+        width: "100px",
+        height: "100px",
+        background: "radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%)",
+        borderRadius: "50%",
+        filter: "blur(20px)",
+        zIndex: 0
+      }} />
+
+      <div style={{
+        position: "absolute",
+        bottom: "-30px",
+        left: "-30px",
+        width: "80px",
+        height: "80px",
+        background: "radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, transparent 70%)",
+        borderRadius: "50%",
+        filter: "blur(15px)",
+        zIndex: 0
+      }} />
+    </div>
+  )
 }
